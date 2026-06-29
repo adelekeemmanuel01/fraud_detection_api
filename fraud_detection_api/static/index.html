@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en-uk">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraud Detection System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 2.5 19 5v5.7c0 3.8-2.4 7-7 9.3-4.6-2.3-7-5.5-7-9.3V5l7-2.5Z" />
+        <path d="M9.2 12.2 11 14l3.8-4.8" />
+        <path d="M14.4 6.6 12 9.2 9.6 6.6" />
+      </svg>
+    </div>
+    <div>
+      <h1>AI Fraud Detection System</h1>
+      <p>CSC 476 · Group 18</p>
+    </div>
+    <span class="badge">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v4" />
+          <path d="M12 18v4" />
+          <path d="M4.93 4.93l2.83 2.83" />
+          <path d="M16.24 16.24l2.83 2.83" />
+          <path d="M2 12h4" />
+          <path d="M18 12h4" />
+          <path d="M4.93 19.07l2.83-2.83" />
+          <path d="M16.24 7.76l2.83-2.83" />
+          <circle cx="12" cy="12" r="4" />
+        </svg></span>
+      API Connected
+    </span>
+  </header>
+
+  <div class="container">
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="label">Total Checked</div>
+        <div class="value blue" id="stat-total">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Fraud Detected</div>
+        <div class="value red" id="stat-fraud">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Legitimate</div>
+        <div class="value green" id="stat-legit">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Fraud Rate</div>
+        <div class="value orange" id="stat-rate">0%</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <!-- LEFT: Input form -->
+      <div>
+        <div class="card">
+          <h2>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="6" />
+                <path d="M20 20l-4.2-4.2" />
+              </svg></span>
+            Analyse Transaction
+          </h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Transaction Type</label>
+              <select id="type">
+                <option value="TRANSFER">TRANSFER</option>
+                <option value="CASH_OUT">CASH_OUT</option>
+                <option value="PAYMENT">PAYMENT</option>
+                <option value="CASH_IN">CASH_IN</option>
+                <option value="DEBIT">DEBIT</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Step (hour of simulation)</label>
+              <input type="number" id="step" value="1" min="1" max="744" />
+            </div>
+            <div class="form-group full">
+              <label>Amount (₦)</label>
+              <input type="number" id="amount" value="1338487" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Sender Balance Before</label>
+              <input type="number" id="oldbalanceOrg" value="1338487" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Sender Balance After</label>
+              <input type="number" id="newbalanceOrig" value="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Receiver Balance Before</label>
+              <input type="number" id="oldbalanceDest" value="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Receiver Balance After</label>
+              <input type="number" id="newbalanceDest" value="1338487" min="0" />
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-primary" onclick="analyseTransaction()">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="6" />
+                  <path d="M20 20l-4.2-4.2" />
+                </svg></span>
+              Analyse Transaction
+            </button>
+            <button class="btn-secondary" onclick="clearForm()">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4h8v2" />
+                  <path d="M5 6v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6" />
+                </svg></span>
+              Clear
+            </button>
+          </div>
+
+          <!-- Quick fill buttons -->
+          <div class="btn-row" style="margin-top:10px;">
+            <button class="btn-fraud" onclick="fillFraud()" style="flex:1">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 3l7 4v5c0 4.2-2.8 7.8-7 9-4.2-1.2-7-4.8-7-9V7l7-4z" />
+                  <path d="M9.5 12.5l1.8 1.8 3.2-4" />
+                </svg></span>
+              Fill Fraud Example
+            </button>
+            <button class="btn-legit" onclick="fillLegit()" style="flex:1">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12l4 4 10-10" />
+                </svg></span>
+              Fill Legit Example
+            </button>
+          </div>
+
+          <!-- Spinner -->
+          <div class="spinner" id="spinner" style="margin-top:16px;"></div>
+
+          <!-- Result panel -->
+          <div class="result-panel" id="result-panel">
+            <div class="result-icon" id="result-icon"></div>
+            <div class="result-label" id="result-label"></div>
+            <div class="result-prob" id="result-prob"></div>
+
+            <div class="prob-bar-wrap">
+              <div class="bar-label">
+                <span>Fraud Probability</span>
+                <span id="bar-pct"></span>
+              </div>
+              <div class="prob-bar-bg">
+                <div class="prob-bar-fill" id="prob-bar" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="result-details">
+              <div class="detail-item">
+                <div class="d-label">Risk Level</div>
+                <div class="d-value" id="d-risk"></div>
+              </div>
+              <div class="detail-item">
+                <div class="d-label">Transaction Type</div>
+                <div class="d-value" id="d-type"></div>
+              </div>
+              <div class="detail-item">
+                <div class="d-label">Amount</div>
+                <div class="d-value" id="d-amount"></div>
+              </div>
+              <div class="detail-item">
+                <div class="d-label">Balance Drained</div>
+                <div class="d-value" id="d-delta"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Transaction history -->
+      <div>
+        <div class="card" style="height:100%">
+          <h2>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 4h14" />
+                <path d="M7 2v4" />
+                <path d="M17 2v4" />
+                <rect x="5" y="6" width="14" height="14" rx="2" />
+                <path d="M8 11h8" />
+                <path d="M8 14h5" />
+              </svg></span>
+            Transaction History
+            <button class="btn-secondary" onclick="clearHistory()"
+              style="margin-left:auto;padding:5px 12px;font-size:12px">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4h8v2" />
+                  <path d="M5 6v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6" />
+                </svg></span>
+              Clear
+            </button>
+          </h2>
+          <div class="history-list" id="history-list">
+            <div class="empty-history" id="empty-msg">
+              No transactions analysed yet.<br>Submit one to get started.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>
