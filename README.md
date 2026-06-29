@@ -78,21 +78,21 @@ The objectives of this project are:
 
 # Project Features
 
-✅ Fraud prediction
+ Fraud prediction
 
-✅ Explainable AI (SHAP)
+ Explainable AI (SHAP)
 
-✅ Random Forest classifier
+ Random Forest classifier
 
-✅ Flask REST API
+ Flask REST API
 
-✅ Interactive web dashboard
+ Interactive web dashboard
 
-✅ Model evaluation metrics
+ Model evaluation metrics
 
-✅ Feature importance visualization
+ Feature importance visualization
 
-✅ Real-time transaction prediction
+ Real-time transaction prediction
 
 ---
 
